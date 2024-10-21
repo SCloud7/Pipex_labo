@@ -6,7 +6,7 @@
 /*   By: ssoukoun <ssoukoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 13:35:26 by ssoukoun          #+#    #+#             */
-/*   Updated: 2024/10/21 18:29:00 by ssoukoun         ###   ########.fr       */
+/*   Updated: 2024/10/21 21:16:17 by ssoukoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,21 +34,24 @@ void error_case(t_pipex **pipex_var)
         printf("echec de l'ouverture du fichier");
     else if(error == 3)
         printf("soit fichier innexistant ou illisible");
-    else if(error == 4)
-        printf("soit fichier innexistant ou illisible ou peut pas ecrire");
     else if(error == 9)
         printf("le deuxieme fd a pas les droits");
-    free(pipex_var);
+    else if(error == 7)
+        printf("on peut pas ecrire");
+    else if(error == 8)
+        printf("probleme de ");
+    free_pipex(pipex_var);
     exit(0);
 }
 
 void ex_cmd_1(t_pipex *px)
 {
+    // int i;
     px->cmd1->pid = fork();
     if(px->cmd1->pid == -1)
         return(px->error = 8, error_case(&px), perror("fork2"));
-    dup2(px->f1, STDIN_FILENO);
-    dup2(px->pipfd[0], STDOUT_FILENO);
+    // dup2(px->f1, STDIN_FILENO);
+    // dup2(px->pipfd[0], STDOUT_FILENO);
     //close(px->f1);
     close(px->pipfd[1]);
     close(px->pipfd[0]);
@@ -61,7 +64,7 @@ void ex_cmd_2(t_pipex *px)
     if(px->cmd2->pid == -1)
         return(px->error = 8, error_case(&px), perror("fork2"));
     dup2(px->pipfd[1], STDIN_FILENO);
-    dup2(px->f2, STDOUT_FILENO);
+    // dup2(px->f2, STDOUT_FILENO);
     //close(px->f2);
     close(px->pipfd[0]);
     close(px->pipfd[1]);

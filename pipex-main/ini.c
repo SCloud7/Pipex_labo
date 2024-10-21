@@ -6,7 +6,7 @@
 /*   By: ssoukoun <ssoukoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/12 18:22:56 by ssoukoun          #+#    #+#             */
-/*   Updated: 2024/10/21 19:10:27 by ssoukoun         ###   ########.fr       */
+/*   Updated: 2024/10/21 21:21:15 by ssoukoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ t_cmd	*init_cmd(char *argv, char **env, int *error)
 		return (*error = 1, NULL);
 	if (env == NULL)
 	{
-		if (ft_strncmp(argv, "/", 1))
+		if (ft_strncmp(argv, "/", 1) || ft_strncmp(argv, "./", 2))
 		{
 			c1->cmd = ft_split(argv, ' ');
 			c1->path = c1->cmd[0];
@@ -121,8 +121,25 @@ t_cmd	*init_cmd(char *argv, char **env, int *error)
 	return (c1);
 }
 
-char	*init_file(char *argv, int f1ouf2 , int *error)
-{
+char	*init_file(char *argv, int *error, int fd)
+{	
+	if(fd == 1)
+	{
+		if (access(argv, F_OK | R_OK) == -1)
+			return (*error = 3, NULL);
+		return(argv);
+	}
+	
+	if(fd == 2)
+	{
+		if (access(argv, F_OK | W_OK) != -1)
+			return (argv);
+		else if (access(argv, F_OK) == -1)
+			return(argv);
+		else
+			return(*error = 7, NULL);
+	}
+	return(*error = 8, NULL);
 	// si f1 alors verifier lexistance et lecriture
 	// si f2 alors verifier si on peut le cree ou quil existe et quon peut ecrire
 }
@@ -134,15 +151,15 @@ t_pipex	*init_pipex(char **argv, char **env)
 	t_pipex *pipex;
 
 	pipex = calloc(1, sizeof(t_pipex));
+	pipex->error = 0;
 	if (pipex == NULL)
 		return (NULL);
 	if (pipe(pipex->pipfd) == -1)
 		return (pipex->error = 10, NULL);
-	pipex->error = 0;
 	// a refaire meiux anticiper comment gerer ces ca derreur et sa structure en cas dechec sans 
-	// pipex->f1 = init_file(argv[1], pipex->error, 1);
-	// pipex->f2 = init_file(argv[4], pipex->error, 2);
-	// pipex->cmd1 = init_cmd(argv[2], env, pipex->error);
+	pipex->f1 = argv[1];//init_file(argv[1], &pipex->error, 1);
+	pipex->f2 = argv[4];// init_file(argv[4], &pipex->error, 2);
+	//pipex->cmd1 = init_cmd(argv[2], env, pipex->error);
 	// pipex->cmd2 = init_cmd(argv[3], env, pipex->error);
 	if (pipex->error)
         return (pipex);

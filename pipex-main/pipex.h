@@ -6,7 +6,7 @@
 /*   By: ssoukoun <ssoukoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 18:46:58 by ssoukoun          #+#    #+#             */
-/*   Updated: 2024/10/21 18:43:35 by ssoukoun         ###   ########.fr       */
+/*   Updated: 2024/10/21 20:31:38 by ssoukoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include "./STRUCT.h"
 
 t_cmd	*init_cmd(char *argv, char **env, int *error);
-int		init_file(char *argv, int *error, int fd);
+char	*init_file(char *argv, int *error, int f);
 t_pipex	*init_pipex(char **argv, char **env);
 
 char	*final_cmd(char *argv, char **env, int *error);
