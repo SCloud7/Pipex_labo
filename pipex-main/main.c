@@ -3,16 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sila <sila@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ssoukoun <ssoukoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 18:43:11 by ssoukoun          #+#    #+#             */
-/*   Updated: 2024/10/20 19:41:07 by sila             ###   ########.fr       */
+/*   Updated: 2024/10/21 18:57:09 by ssoukoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./lib/libft.h"
-#include "STRUCT.h"
-#include "pipex.h"
+#include "./pipex.h"
 
 int main(int argc, char **argv, char **envp)
 {
@@ -21,8 +19,8 @@ int main(int argc, char **argv, char **envp)
     if(argc != 5 || !argv[0] || !argv[1] || !argv[2] || !argv[3])
         return(printf("pas le bon nombre d'arguments"), 0);
     pipex = init_pipex(argv, envp);
-    if(pipex || pipex->error != 0)
-        return(error_case(pipex->error));
-    ex(pipex);
-    return(free(pipex), 0);
+    if(pipex == NULL || pipex->error != 0)
+        error_case(&pipex);
+    // ex(pipex);
+    return(free_pipex(&pipex), 0);
 }
